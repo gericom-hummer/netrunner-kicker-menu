@@ -119,7 +119,7 @@ Item {
 
         onPositionChanged: {
             if (pressX != -1 && model.url && dragHelper.isDrag(pressX, pressY, mouse.x, mouse.y)) {
-                dragHelper.startDrag(kicker, model.url);
+                dragHelper.startDrag(kicker, model.url, model.decoration);
                 pressX = -1;
                 pressY = -1;
 
@@ -226,7 +226,8 @@ Item {
             width: visible ? units.iconSizes.small : 0
             height: width
 
-            visible: (item.ListView.view.currentIndex == index && hasChildren)
+            visible: hasChildren
+            opacity: (item.ListView.view.currentIndex == index) ? 1.0 : 0.4
 
             svg: arrows
             elementId: (Qt.application.layoutDirection == Qt.RightToLeft) ? "left-arrow" : "right-arrow"

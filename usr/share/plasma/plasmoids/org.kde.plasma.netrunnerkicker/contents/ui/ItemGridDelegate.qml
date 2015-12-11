@@ -37,10 +37,13 @@ MouseArea {
     property bool showLabel: true
 
     property int itemIndex: model.index
+    property string favoriteId: model.favoriteId
     property url url: model.url != undefined ? model.url : ""
+    property variant icon: model.decoration != undefined ? model.decoration : ""
     property bool pressed: false
     property bool hasActionList: ((model.favoriteId != null)
         || (("hasActionList" in model) && (model.hasActionList == true)))
+    property Item view: GridView.view
     property Item menu: actionMenu
 
     Accessible.role: Accessible.MenuItem
@@ -73,7 +76,11 @@ MouseArea {
     }
 
     onActionTriggered: {
-        Tools.triggerAction(GridView.view.model, model.index, actionId, actionArgument);
+        var close = Tools.triggerAction(GridView.view.model, model.index, actionId, actionArgument);
+
+        if (close) {
+            root.toggle();
+        }
     }
 
     function openActionMenu(visualParent, x, y) {
@@ -126,6 +133,16 @@ MouseArea {
         color: "white" // FIXME TODO: Respect theming?
 
         text: model.display
+    }
+
+    PlasmaCore.ToolTipArea {
+        id: toolTip
+
+        property string text: model.display
+
+        anchors.fill: parent
+        active: root.visible && label.truncated
+        mainItem: toolTipDelegate
     }
 
     Keys.onPressed: {
